@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# dynamically setup base URI
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+RewriteRule ^(.*) - [E=BASE_URI:%1]
+
+# redirect every request to index.php
+# and give the relative URL in "_url" GET param
+# Si le répertoire existe physiquement sur le serveur, Apache ne redirigera pas vers index.php (d = directory)
+RewriteCond %{REQUEST_FILENAME} !-d
+# Si le fichier existe physiquement sur le serveur, Apache ne redirigera pas vers index.php (f = file)
+RewriteCond %{REQUEST_FILENAME} !-f
+# Si les RewriteCond sont à vrai, alors Apache exécute la RewriteRule
+RewriteRule ^(.*)$ index.php?_url=/$1 [QSA,L]
